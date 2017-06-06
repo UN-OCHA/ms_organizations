@@ -37,6 +37,10 @@ function ms_organizations_fetch_and_sync() {
 
           foreach ($data['data'] as $item) {
             if (isset($item['label']) && $item['label'] && isset($item['id']) && $item['id']) {
+              $label = $item['label'];
+              if ($item['acronym']) {
+                $label .= ' (' . $item['acronym'] . ')';
+              }
               $query = new EntityFieldQuery();
               $query->entityCondition('entity_type', 'taxonomy_term');
               $query->entityCondition('bundle', 'ms_organization', '=');
@@ -48,7 +52,7 @@ function ms_organizations_fetch_and_sync() {
                 $vocabularies = taxonomy_vocabulary_get_names();
                 $term = (object) array(
                   'vid' => $vocabularies['ms_organization']->vid,
-                  'name' => $item['label'],
+                  'name' => $label,
                   'vocabulary_machine_name' => 'ms_organization'
                 );
               }
@@ -68,9 +72,9 @@ function ms_organizations_fetch_and_sync() {
               }
 
               if ($language == 'en') {
-                $term->name = $item['label'];
+                $term->name = $label;
               }
-              $term->name_field[$language][0]['value'] = $item['label'];
+              $term->name_field[$language][0]['value'] = $label;
               $term->field_ms_hrinfo_id[LANGUAGE_NONE][0]['value'] = $item['id'];
 
               taxonomy_term_save($term);
