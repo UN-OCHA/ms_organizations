@@ -5,27 +5,28 @@
  */
 
 /**
- * Implements hook_cron()
- * Synchronizes and fetches organizations from www.humanitarianresponse.info/api/v1.0/organizations on cron
+ * Implements hook_cron().
+ * Fetches organizations from hrinfo on cron.
  */
 function ms_organizations_cron() {
   ms_organizations_fetch_and_sync();
 }
 
 /**
- * Fetch and sync local groups from www.humanitarianresponse.info/api/v1.0/organizations.
+ * Fetch and sync local groups from 
+ * www.humanitarianresponse.info/api/v1.0/organizations.
  */
 function ms_organizations_fetch_and_sync() {
   $languages = array(
     'en',
     'fr',
-    'es'
+    'es',
   );
   $installed_languages = array_keys(language_list());
 
   foreach ($languages as $language) {
     if (in_array($language, $installed_languages)) {
-      $url = 'https://www.humanitarianresponse.info/'.$language.'/api/v1.0/organizations';
+      $url = 'https://www.humanitarianresponse.info/' . $language . '/api/v1.0/organizations';
 
       while(TRUE) {
         $request = drupal_http_request($url);
@@ -53,7 +54,7 @@ function ms_organizations_fetch_and_sync() {
                 $term = (object) array(
                   'vid' => $vocabularies['ms_organization']->vid,
                   'name' => $label,
-                  'vocabulary_machine_name' => 'ms_organization'
+                  'vocabulary_machine_name' => 'ms_organization',
                 );
               }
               else {
@@ -64,7 +65,7 @@ function ms_organizations_fetch_and_sync() {
                     'translate' => 0,
                     'status' => 1,
                     'language' => $language,
-                    'source' => 'en'
+                    'source' => 'en',
                   );
                   $handler = entity_translation_get_handler('taxonomy_term', $term);
                   $handler->setTranslation($translation);
@@ -87,7 +88,7 @@ function ms_organizations_fetch_and_sync() {
             break;
           }
         }
-      }
+      };
     }
   }
 }
