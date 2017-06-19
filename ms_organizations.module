@@ -6,6 +6,7 @@
 
 /**
  * Implements hook_cron().
+ *
  * Fetches organizations from hrinfo on cron.
  */
 function ms_organizations_cron() {
@@ -13,7 +14,9 @@ function ms_organizations_cron() {
 }
 
 /**
- * Fetch and sync local groups from 
+ * Fetch and sync local groups.
+ *
+ * Fetch and sync local groups from
  * www.humanitarianresponse.info/api/v1.0/organizations.
  */
 function ms_organizations_fetch_and_sync() {
@@ -28,7 +31,7 @@ function ms_organizations_fetch_and_sync() {
     if (in_array($language, $installed_languages)) {
       $url = 'https://www.humanitarianresponse.info/' . $language . '/api/v1.0/organizations';
 
-      while(TRUE) {
+      while (TRUE) {
         $request = drupal_http_request($url);
         if (isset($request->data)) {
           $data = drupal_json_decode($request->data);
@@ -88,8 +91,7 @@ function ms_organizations_fetch_and_sync() {
             break;
           }
         }
-      };
+      }
     }
   }
 }
-
