@@ -10,7 +10,12 @@
  * Fetches organizations from hrinfo on cron.
  */
 function ms_organizations_cron() {
-  ms_organizations_fetch_and_sync();
+  $last_pull = variable_get('ms_organizations_last_pull', 0);
+  $now = time();
+  if ($now - $last_pull > 24 * 3600) {
+    ms_organizations_fetch_and_sync();
+    variable_set('ms_organizations_last_pull', $now);
+  }
 }
 
 /**
